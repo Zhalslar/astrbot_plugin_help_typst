@@ -1,15 +1,15 @@
-import re
-import traceback
-from pathlib import Path
-from typing import List, Optional
-from dataclasses import dataclass
-import typst
+import ctypes
 import gc
 import platform
-import ctypes
+import re
+import traceback
+from dataclasses import dataclass
+from pathlib import Path
 
-from ..domain import DefaultCFG
+import typst
+
 from ..utils import process_image_to_webp
+
 
 def force_memory_release():
     # Python 层
@@ -26,19 +26,19 @@ def force_memory_release():
 @dataclass
 class RenderTask:
     template_path: str
-    font_paths: List[str]
+    font_paths: list[str]
     json_str: str
     output_png_path: str
     output_dir: str
     timestamp: str
-    query: Optional[str]
+    query: str | None
     is_temp: bool
     req_id: str
-    webp_limit: int = DefaultCFG.LIMIT_WEBP
-    split_height: int = DefaultCFG.LIMIT_SIDE
-    ppi: float = DefaultCFG.LIMIT_PPI
+    webp_limit: int
+    split_height: int
+    ppi: float
 
-def execute_render_task(task: RenderTask) -> List[str]:
+def execute_render_task(task: RenderTask) -> list[str]:
     """渲染子进程"""
     try:
         # 1. 准备参数
@@ -54,7 +54,7 @@ def execute_render_task(task: RenderTask) -> List[str]:
             task.template_path,
             output=task.output_png_path,
             font_paths=task.font_paths,
-            format="png", 
+            format="png",
             ppi=task.ppi,
             sys_inputs=sys_inputs
         )
