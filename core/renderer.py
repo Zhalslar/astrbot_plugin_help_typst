@@ -84,7 +84,7 @@ class TypstRenderer:
                 if count == 0:
                     if is_temp and json_path.exists():
                         json_path.unlink(missing_ok=True)
-                    return None, "empty"
+                    return None, "没有可显示的内容"
 
                 # --- 2. 缓存校验 (仅静态) ---
                 need_compile = True
