@@ -97,14 +97,11 @@ class HelpTypst(Star):
             return
         if not result:
             return
-
         try:
-            comps = [Image.fromFileSystem(p) for p in result.images]
-            yield event.chain_result(comps)  # type: ignore
+            yield event.chain_result([Image.fromFileSystem(p) for p in result.images])
         finally:
             if result.temp_files:
                 asyncio.create_task(self._cleanup_task(result.temp_files))
-
 
     async def _cleanup_task(self, files: list[Path]):
         """异步清理任务"""
@@ -120,7 +117,7 @@ class HelpTypst(Star):
     async def show_menu(self, event: AstrMessageEvent, query: str | None = None):
         """显示指令菜单"""
         if self.config.send_hint:
-            yield event.plain_result("正在生成帮助图...")
+            yield event.plain_result("正在渲染帮助图...")
         async for r in self._handle_request(
             event,
             analyzer=self.cmd_analyzer,
@@ -134,7 +131,7 @@ class HelpTypst(Star):
     async def show_events(self, event: AstrMessageEvent, query: str | None = None):
         """显示事件监听列表"""
         if self.config.send_hint:
-            yield event.plain_result("正在分析事件监听器...")
+            yield event.plain_result("正在渲染事件监听图...")
         async for r in self._handle_request(
             event,
             analyzer=self.evt_analyzer,
@@ -148,7 +145,7 @@ class HelpTypst(Star):
     async def show_filters(self, event: AstrMessageEvent, query: str | None = None):
         """显示过滤器详情"""
         if self.config.send_hint:
-            yield event.plain_result("正在分析过滤器...")
+            yield event.plain_result("正在渲染过滤器详情图...")
         async for r in self._handle_request(
             event,
             analyzer=self.flt_analyzer,
